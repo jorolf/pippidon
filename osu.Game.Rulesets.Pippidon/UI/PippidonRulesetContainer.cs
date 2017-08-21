@@ -40,8 +40,8 @@ namespace osu.Game.Rulesets.Pippidon.UI
             };
         }
 
-        public override PassThroughInputManager CreateKeyBindingInputManager() => new PippidonInputManager(Ruleset?.RulesetInfo);
-
         protected override FramedReplayInputHandler CreateReplayInputHandler(Replay replay) => new PippidonFramedReplayInputHandler(replay);
+
+        public override PassThroughInputManager CreateInputManager() => new PippidonInputManager(Ruleset?.RulesetInfo);
     }
 }

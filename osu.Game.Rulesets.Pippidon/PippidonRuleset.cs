@@ -31,13 +31,6 @@ namespace osu.Game.Rulesets.Pippidon
 
         public override DifficultyCalculator CreateDifficultyCalculator(Beatmap beatmap) => new PippidonDifficultyCalculator();
 
-        public override IEnumerable<KeyCounter> CreateGameplayKeys() => new[]
-        {
-            new KeyCounterKeyboard(Key.W),
-            new KeyCounterKeyboard(Key.S),
-            new KeyCounterKeyboard(Key.D),
-        };
-
         public override RulesetContainer CreateRulesetContainerWith(WorkingBeatmap beatmap, bool isForCurrentRuleset) => new PippidonRulesetContainer(this, beatmap, isForCurrentRuleset);
 
         public override ScoreProcessor CreateScoreProcessor() => new PippidonScoreProcessor();
