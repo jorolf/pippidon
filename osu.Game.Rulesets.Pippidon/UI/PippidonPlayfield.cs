@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
         protected override Container<Drawable> Content => content;
 
         private PippidonContainer pippidon;
-        public int PippidonLane => pippidon.LanePosition - 1;
+        public int PippidonLane => pippidon.LanePosition;
 
         public PippidonPlayfield(PippidonRuleset ruleset) : base(Axes.X)
         {
@@ -113,11 +113,16 @@ namespace osu.Game.Rulesets.Pippidon.UI
             {
                 get
                 {
-                    return (int)(Y / Height) + 1;
+                    return (int)(Y / Height);
                 }
                 set
                 {
-                    Y = ((value + 3) % 3 - 1) * Height;
+                    if (value < -1)
+                        Y = 1 * Height;
+                    else if (value > 1)
+                        Y = -1 * Height;
+                    else
+                        Y = value * Height;
                 }
             }
 
