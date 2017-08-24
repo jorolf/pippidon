@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
             floatRanges[beatmap] = new FloatRange
             {
                 Min = positions.Min(),
-                Max = positions.Max() + 1, //So we exclude ones later
+                Max = positions.Max() + 1, //So we exclude '1' later
             };
         }
 

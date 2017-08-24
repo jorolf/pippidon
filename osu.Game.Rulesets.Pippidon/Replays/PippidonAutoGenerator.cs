@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
                 }
 
                 Frames.Add(new ReplayFrame(time, null, null, button));
-                Frames.Add(new ReplayFrame(time + KEY_UP_DELAY, null, null, ReplayButtonState.None));
+                Frames.Add(new ReplayFrame(time + KEY_UP_DELAY, null, null, ReplayButtonState.None)); //Release the keys as well
                 lastLane = hitObject.Lane;
             }
 
