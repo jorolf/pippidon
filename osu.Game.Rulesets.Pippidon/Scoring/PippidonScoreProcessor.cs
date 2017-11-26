@@ -1,32 +1,33 @@
-﻿using osu.Game.Rulesets.Objects.Drawables;
+﻿using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Pippidon.Judgements;
 using osu.Game.Rulesets.Pippidon.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Pippidon.Scoring
 {
-    public class PippidonScoreProcessor : ScoreProcessor<PippidonObject, PippidonJudgement>
+    public class PippidonScoreProcessor : ScoreProcessor<PippidonObject>
     {
         public PippidonScoreProcessor()
         {
         }
 
-        public PippidonScoreProcessor(RulesetContainer<PippidonObject, PippidonJudgement> ruleset) : base(ruleset)
+        public PippidonScoreProcessor(RulesetContainer<PippidonObject> ruleset) : base(ruleset)
         {
         }
 
-        protected override void OnNewJudgement(PippidonJudgement judgement)
+        protected override void SimulateAutoplay(Beatmap<PippidonObject> beatmap)
         {
-            Accuracy.Value = Judgements.Where(judgement_ => judgement_.Result == HitResult.Hit).Count() / (float)Judgements.Count;
-            if (judgement.Result == HitResult.Hit)
-                TotalScore.Value++;
+            foreach (var unused in beatmap.HitObjects)
+            {
+                AddJudgement(new PippidonJudgement { Result = HitResult.Perfect });
+            }
         }
 
-        protected override void Reset()
+        protected override void Reset(bool storeResults)
         {
-            base.Reset();
+            base.Reset(storeResults);
 
             Health.Value = 1;
             Accuracy.Value = 1;

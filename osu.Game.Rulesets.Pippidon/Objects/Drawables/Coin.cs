@@ -2,15 +2,21 @@
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Pippidon.Judgements;
 using OpenTK;
 using System;
+using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Pippidon.Judgements;
+using OpenTK.Graphics;
 
 namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 {
-    public class Coin : DrawableScrollingHitObject<PippidonObject, PippidonJudgement>
+    public class Coin : DrawableScrollingHitObject<PippidonObject>
     {
+        private const int hit_window = 100;
+
         private readonly Func<int, bool> touchingPippi;
+
+        private Judgement judgement;
 
         public Coin(PippidonObject hitObject, TextureStore textures, Func<int, bool> touchingPippi) : base(hitObject)
         {
@@ -30,25 +36,56 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
         {
             base.Update();
 
-            if (HitObject.StartTime < Time.Current)
+            if (Time.Current - HitObject.StartTime < -hit_window)
                 UpdateJudgement(true);
         }
 
-        protected override void CheckJudgement(bool userTriggered)
+        protected override void CheckForJudgements(bool userTriggered, double timeOffset)
         {
-            if (HitObject.StartTime < Time.Current)
+            if (Math.Abs(timeOffset) < hit_window)
             {
-                Judgement.Result = touchingPippi(HitObject.Lane) ? HitResult.Hit : HitResult.Miss;
-                Judgement.TimeOffset = Time.Current - HitObject.StartTime;
+                if (touchingPippi(HitObject.Lane))
+                {
+                    if (judgement == null)
+                    {
+                        judgement = new PippidonJudgement
+                        {
+                            Result = HitResult.Perfect,
+                            TimeOffset = timeOffset,
+                        };
+                    }
+                    else if (timeOffset <= 0)
+                    {
+                        judgement.TimeOffset = 0;
+                    }
+                }
+
+                if (judgement != null && timeOffset >= 0)
+                {
+                    AddJudgement(judgement);
+                }
+            }
+            else if (timeOffset > hit_window)
+            {
+                AddJudgement(new PippidonJudgement
+                {
+                    Result = HitResult.Miss,
+                });
             }
         }
 
-        protected override PippidonJudgement CreateJudgement() => new PippidonJudgement();
-
         protected override void UpdateState(ArmedState state)
         {
-            if (state == ArmedState.Hit)
-                this.ScaleTo(5, 1500, Easing.OutQuint).FadeOut(1500, Easing.OutQuint).Expire();
+            ClearTransformsAfter(Time.Current);
+            switch (state)
+            {
+                case ArmedState.Hit:
+                    this.ScaleTo(5, 1500, Easing.OutQuint).FadeOut(1500, Easing.OutQuint).Expire();
+                    break;
+                case ArmedState.Miss:
+                    this.FadeColour(Color4.Red, 1000, Easing.InQuint).Then().FadeOut(1000, Easing.InQuint).Expire();
+                    break;
+            }
         }
     }
 }

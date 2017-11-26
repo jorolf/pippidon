@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
             {
                 User = new User
                 {
-                    Username = @"Autoplay",
+                    Username = @"Pippppipiddddooon",
                 }
             };
         }

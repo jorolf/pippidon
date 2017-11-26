@@ -1,11 +1,8 @@
 ﻿using osu.Game.Rulesets.UI;
-using osu.Game.Rulesets.Pippidon.Judgements;
-using osu.Game.Rulesets.Pippidon.Objects;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Graphics.Sprites;
 using OpenTK;
 using osu.Framework.Input.Bindings;
@@ -17,21 +14,17 @@ using osu.Framework.Graphics.Textures;
 
 namespace osu.Game.Rulesets.Pippidon.UI
 {
-    public class PippidonPlayfield : ScrollingPlayfield<PippidonObject, PippidonJudgement>
+    public class PippidonPlayfield : ScrollingPlayfield
     {
-        private readonly PippidonRuleset ruleset;
-
         private readonly Container content;
 
         protected override Container<Drawable> Content => content;
 
-        private PippidonContainer pippidon;
+        private readonly PippidonContainer pippidon;
         public int PippidonLane => pippidon.LanePosition;
 
         public PippidonPlayfield(PippidonRuleset ruleset) : base(Axes.X)
         {
-            this.ruleset = ruleset;
-
             VisibleTimeRange.Value = 6000;
 
             AddRangeInternal(new Drawable[]
@@ -97,11 +90,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
             protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, TrackAmplitudes amplitudes)
             {
-
-                if (effectPoint.KiaiMode)
-                    this.FadeColour(osuColour.PinkLight, 1000);
-                else
-                    this.FadeColour(osuColour.BlueLight, 1000);
+                this.FadeColour(effectPoint.KiaiMode ? osuColour.PinkLight : osuColour.BlueLight, 1000);
             }
         }
 
@@ -111,18 +100,18 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
             public int LanePosition
             {
-                get
+                get { return (int)(Y / Height); }
+                private set
                 {
-                    return (int)(Y / Height);
-                }
-                set
-                {
+                    float y;
                     if (value < -1)
-                        Y = 1 * Height;
+                        y = 1 * Height;
                     else if (value > 1)
-                        Y = -1 * Height;
+                        y = -1 * Height;
                     else
-                        Y = value * Height;
+                        y = value * Height;
+
+                    this.MoveToY(y);
                 }
             }
 
@@ -130,7 +119,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
             {
                 set
                 {
-                    (Child as Sprite).Texture = value;
+                    ((Sprite)Child).Texture = value;
                 }
             }
 

@@ -1,7 +1,6 @@
 ﻿using osu.Game.Rulesets.Replays;
 using System.Collections.Generic;
 using osu.Framework.Input;
-using OpenTK.Input;
 
 namespace osu.Game.Rulesets.Pippidon.Replays
 {
@@ -13,16 +12,19 @@ namespace osu.Game.Rulesets.Pippidon.Replays
 
         public override List<InputState> GetPendingStates()
         {
-            var keys = new List<Key>();
+            var keys = new List<PippidonAction>();
 
             if (CurrentFrame?.MouseRight1 == true)
-                keys.Add(Key.S);
+                keys.Add(PippidonAction.MoveDown);
             if (CurrentFrame?.MouseLeft1 == true)
-                keys.Add(Key.W);
+                keys.Add(PippidonAction.MoveUp);
 
             return new List<InputState>
             {
-                new InputState { Keyboard = new ReplayKeyboardState(keys) }
+                new ReplayState<PippidonAction>
+                {
+                    PressedActions = keys,
+                }
             };
         }
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Pippidon.Objects;
 using osu.Game.Rulesets.Objects.Types;
@@ -13,7 +12,7 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
     {
         protected override IEnumerable<Type> ValidConversionTypes => new[] { typeof(IHasXPosition) , typeof(IHasYPosition) };
 
-        private Dictionary<Beatmap, FloatRange> floatRanges = new Dictionary<Beatmap, FloatRange>();
+        private readonly Dictionary<Beatmap, FloatRange> floatRanges = new Dictionary<Beatmap, FloatRange>();
 
         protected override IEnumerable<PippidonObject> ConvertHitObject(HitObject original, Beatmap beatmap)
         {

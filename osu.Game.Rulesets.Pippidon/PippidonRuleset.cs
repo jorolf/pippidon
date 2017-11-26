@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
-using osu.Game.Screens.Play;
 using osu.Game.Rulesets.Pippidon.UI;
-using OpenTK.Input;
 using osu.Framework.Input.Bindings;
-using osu.Game.Rulesets.Pippidon.Scoring;
 using osu.Framework.IO.Stores;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
@@ -29,13 +25,9 @@ namespace osu.Game.Rulesets.Pippidon
 
         public override string Description => "pippipidoooooon";
 
-        public override DifficultyCalculator CreateDifficultyCalculator(Beatmap beatmap) => new PippidonDifficultyCalculator();
-
         public override RulesetContainer CreateRulesetContainerWith(WorkingBeatmap beatmap, bool isForCurrentRuleset) => new PippidonRulesetContainer(this, beatmap, isForCurrentRuleset);
 
-        public override ScoreProcessor CreateScoreProcessor() => new PippidonScoreProcessor();
-
-        public override Mod GetAutoplayMod() => new ModAutoplay();
+        public override DifficultyCalculator CreateDifficultyCalculator(Beatmap beatmap, Mod[] mods = null) => new PippidonDifficultyCalculator();
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
