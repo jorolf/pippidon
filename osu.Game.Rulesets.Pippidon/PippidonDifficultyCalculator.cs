@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.Pippidon
 {
     public class PippidonDifficultyCalculator : DifficultyCalculator
     {
-        public override double Calculate(Dictionary<string, string> categoryDifficulty = null)
+        public override double Calculate(Dictionary<string, double> categoryDifficulty = null)
         {
             return 0;
         }

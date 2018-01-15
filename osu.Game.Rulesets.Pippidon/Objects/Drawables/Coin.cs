@@ -7,10 +7,11 @@ using System;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Pippidon.Judgements;
 using OpenTK.Graphics;
+using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 {
-    public class Coin : DrawableScrollingHitObject<PippidonObject>
+    public class Coin : DrawableHitObject<PippidonObject>
     {
         private const int hit_window = 100;
 

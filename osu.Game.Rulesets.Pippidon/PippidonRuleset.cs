@@ -40,6 +40,8 @@ namespace osu.Game.Rulesets.Pippidon
             }
         }
 
+        public override string ShortName => "pipidon";
+
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {
             new KeyBinding(InputKey.W, PippidonAction.MoveUp),

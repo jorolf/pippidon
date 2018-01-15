@@ -1,5 +1,4 @@
-﻿using osu.Game.Rulesets.UI;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
 using osu.Framework.Allocation;
@@ -11,6 +10,7 @@ using osu.Framework.Audio.Track;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.Pippidon.UI
 {
@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
         private readonly PippidonContainer pippidon;
         public int PippidonLane => pippidon.LanePosition;
 
-        public PippidonPlayfield(PippidonRuleset ruleset) : base(Axes.X)
+        public PippidonPlayfield(PippidonRuleset ruleset) : base(ScrollingDirection.Left)
         {
             VisibleTimeRange.Value = 6000;
 

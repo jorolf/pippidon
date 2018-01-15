@@ -10,6 +10,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Pippidon.Objects.Drawables;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Pippidon.Replays;
+using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.Pippidon.UI
 {
