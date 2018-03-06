@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
 
         protected override IEnumerable<PippidonObject> ConvertHitObject(HitObject original, Beatmap beatmap)
         {
-            float pos = (original as IHasYPosition)?.Y ?? (original as IHasXPosition).X;
+            float pos = (original as IHasYPosition)?.Y ?? ((IHasXPosition)original).X;
 
             if (!floatRanges.ContainsKey(beatmap))
                 calcRange(beatmap);

@@ -25,37 +25,30 @@ namespace osu.Game.Rulesets.Pippidon.Replays
 
         public override Replay Generate()
         {
-            Frames.Add(new ReplayFrame(-100000, null, null, ReplayButtonState.None));
-            Frames.Add(new ReplayFrame(Beatmap.HitObjects[0].StartTime - 1000, null, null, ReplayButtonState.None));
-
-            double lastTime = Beatmap.HitObjects[0].StartTime - 1000;
             int lastLane = 0;
             foreach(PippidonObject hitObject in Beatmap.HitObjects)
             {
-                double time = (lastTime + hitObject.StartTime) / 2;
-                lastTime = hitObject.StartTime;
-
                 if (lastLane == hitObject.Lane)
                     continue;
 
-                ReplayButtonState button; //Left = Up, Right = Down
+                PippidonAction button; //Left = Up, Right = Down
                 switch (lastLane)
                 {
                     case -1:
-                        button = hitObject.Lane == 0 ? ReplayButtonState.Right1 : ReplayButtonState.Left1;
+                        button = hitObject.Lane == 0 ? PippidonAction.MoveDown : PippidonAction.MoveUp;
                         break;
                     case 0:
-                        button = hitObject.Lane == 1 ? ReplayButtonState.Right1 : ReplayButtonState.Left1;
+                        button = hitObject.Lane == 1 ? PippidonAction.MoveDown : PippidonAction.MoveUp;
                         break;
                     case 1:
-                        button = hitObject.Lane == -1 ? ReplayButtonState.Right1 : ReplayButtonState.Left1;
+                        button = hitObject.Lane == -1 ? PippidonAction.MoveDown : PippidonAction.MoveUp;
                         break;
                     default:
                         throw new Exception("Unknown lane");
                 }
 
-                Frames.Add(new ReplayFrame(time, null, null, button));
-                Frames.Add(new ReplayFrame(time + KEY_UP_DELAY, null, null, ReplayButtonState.None)); //Release the keys as well
+                Frames.Add(new PippidonReplayFrame(button));
+                Frames.Add(new PippidonReplayFrame()); //Release the keys as well
                 lastLane = hitObject.Lane;
             }
 

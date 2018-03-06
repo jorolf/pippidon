@@ -6,6 +6,7 @@ using osu.Game.Rulesets.Pippidon.Scoring;
 using osu.Game.Rulesets.Pippidon.Beatmaps;
 using osu.Framework.Input;
 using osu.Framework.Graphics;
+using osu.Game.Input.Handlers;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Pippidon.Objects.Drawables;
 using osu.Game.Rulesets.Replays;
@@ -21,7 +22,6 @@ namespace osu.Game.Rulesets.Pippidon.UI
         public PippidonRulesetContainer(PippidonRuleset ruleset, WorkingBeatmap beatmap, bool isForCurrentRuleset) : base(ruleset, beatmap, isForCurrentRuleset)
         {
             pippidonRuleset = ruleset;
-            AspectAdjust = false;
         }
 
         public override ScoreProcessor CreateScoreProcessor() => new PippidonScoreProcessor(this);
@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
             };
         }
 
-        protected override FramedReplayInputHandler CreateReplayInputHandler(Replay replay) => new PippidonFramedReplayInputHandler(replay);
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new PippidonReplayInputHandler(replay);
 
         public override PassThroughInputManager CreateInputManager() => new PippidonInputManager(Ruleset?.RulesetInfo);
     }

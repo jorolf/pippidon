@@ -23,11 +23,12 @@ namespace osu.Game.Rulesets.Pippidon.UI
         private readonly PippidonContainer pippidon;
         public int PippidonLane => pippidon.LanePosition;
 
-        public PippidonPlayfield(PippidonRuleset ruleset) : base(ScrollingDirection.Left)
+        public PippidonPlayfield(PippidonRuleset ruleset)
+            : base(ScrollingDirection.Left)
         {
             VisibleTimeRange.Value = 6000;
 
-            AddRangeInternal(new Drawable[]
+            ScaledContent.AddRange(new Drawable[]
             {
                 content = new Container
                 {
@@ -96,7 +97,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
         private class PippidonContainer : BeatSyncedContainer, IKeyBindingHandler<PippidonAction>
         {
-            public override bool HandleInput => true;
+            public override bool HandleKeyboardInput => true;
 
             public int LanePosition
             {
@@ -117,16 +118,17 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
             public Texture Texture
             {
-                set
-                {
-                    ((Sprite)Child).Texture = value;
-                }
+                set { ((Sprite)Child).Texture = value; }
             }
 
             public PippidonContainer()
             {
                 Child = new Sprite
                 {
+                    FillMode = FillMode.Fit,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(1.2f),
                     RelativeSizeAxes = Axes.Both,
                 };
             }
