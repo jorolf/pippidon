@@ -1,82 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}</ProjectGuid>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Project">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyTitle>osu.Game.Rulesets.Pippidon</AssemblyTitle>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>osu.Game.Rulesets.Pippidon</RootNamespace>
-    <AssemblyName>osu.Game.Rulesets.Pippidon</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\osu\osu.Desktop\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\osu\osu.Desktop\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4" />
-    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
-      <HintPath>..\..\packages\ppy.OpenTK.3.0.13\lib\net45\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\osu\osu.Game\osu.Game.csproj" />
+    <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Beatmaps\PippidonBeatmapConverter.cs" />
-    <Compile Include="Judgements\PippidonJudgement.cs" />
-    <Compile Include="Mods\PippidonMods.cs" />
-    <Compile Include="Objects\Drawables\Coin.cs" />
-    <Compile Include="Objects\PippidonObject.cs" />
-    <Compile Include="PippidonDifficultyCalculator.cs" />
-    <Compile Include="PippidonInputManager.cs" />
-    <Compile Include="PippidonRuleset.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Replays\PippidonAutoGenerator.cs" />
-    <Compile Include="Replays\PippidonReplayFrame.cs" />
-    <Compile Include="Replays\PippidonReplayInputHandler.cs" />
-    <Compile Include="Scoring\PippidonScoreProcessor.cs" />
-    <Compile Include="UI\PippidonPlayfield.cs" />
-    <Compile Include="UI\PippidonRulesetContainer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Samples\coins-earn.mp3" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Textures\coin.png" />
-    <EmbeddedResource Include="Resources\Textures\pippidon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\osu-framework\osu.Framework\osu.Framework.csproj">
-      <Project>{c76bf5b3-985e-4d39-95fe-97c9c879b83a}</Project>
-      <Name>osu.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\osu.Game\osu.Game.csproj">
-      <Project>{2a66dd92-adb1-4994-89e2-c94e04acda0d}</Project>
-      <Name>osu.Game</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(OutDir)osu.Game.Rulesets.Pippidon.dll;$(OutDir)osu.Game.Rulesets.Pippidon.pdb" DestinationFolder="$(SolutionDir)osu/osu.Desktop/bin/$(ConfigurationName)/netcoreapp2.1" />
+  </Target>
 </Project>

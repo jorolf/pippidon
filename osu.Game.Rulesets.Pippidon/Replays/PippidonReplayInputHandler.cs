@@ -1,7 +1,7 @@
-﻿using osu.Game.Rulesets.Replays;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using osu.Game.Rulesets.Replays;
 using System.Linq;
-using osu.Framework.Input;
+using osu.Framework.Input.StateChanges;
 
 namespace osu.Game.Rulesets.Pippidon.Replays
 {
@@ -13,13 +13,13 @@ namespace osu.Game.Rulesets.Pippidon.Replays
 
         protected override bool IsImportant(PippidonReplayFrame frame) => frame.Actions.Any();
 
-        public override List<InputState> GetPendingStates()
+        public override List<IInput> GetPendingInputs()
         {
-            return new List<InputState>
+            return new List<IInput>
             {
                 new ReplayState<PippidonAction>
                 {
-                    PressedActions = CurrentFrame.Actions
+                    PressedActions = CurrentFrame.Actions,
                 }
             };
         }

@@ -4,8 +4,6 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using OpenTK;
 using System;
-using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Pippidon.Judgements;
 using OpenTK.Graphics;
 using osu.Game.Rulesets.Scoring;
 
@@ -17,8 +15,6 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 
         private readonly Func<int, bool> touchingPippi;
 
-        private Judgement judgement;
-
         public Coin(PippidonObject hitObject, TextureStore textures, Func<int, bool> touchingPippi) : base(hitObject)
         {
             Size = new Vector2(40);
@@ -26,7 +22,7 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 
             this.touchingPippi = touchingPippi;
 
-            Add(new Sprite
+            AddInternal(new Sprite
             {
                 RelativeSizeAxes = Axes.Both,
                 Texture = textures.Get("coin"),
@@ -38,40 +34,21 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
             base.Update();
 
             if (Time.Current - HitObject.StartTime < -hit_window)
-                UpdateJudgement(true);
+                UpdateResult(true);
         }
 
-        protected override void CheckForJudgements(bool userTriggered, double timeOffset)
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             if (Math.Abs(timeOffset) < hit_window)
             {
                 if (touchingPippi(HitObject.Lane))
                 {
-                    if (judgement == null)
-                    {
-                        judgement = new PippidonJudgement
-                        {
-                            Result = HitResult.Perfect,
-                            TimeOffset = timeOffset,
-                        };
-                    }
-                    else if (timeOffset <= 0)
-                    {
-                        judgement.TimeOffset = 0;
-                    }
-                }
-
-                if (judgement != null && timeOffset >= 0)
-                {
-                    AddJudgement(judgement);
+                    ApplyResult(r => r.Type = HitResult.Perfect);
                 }
             }
             else if (timeOffset > hit_window)
             {
-                AddJudgement(new PippidonJudgement
-                {
-                    Result = HitResult.Miss,
-                });
+                ApplyResult(r => r.Type = HitResult.Miss);
             }
         }
 

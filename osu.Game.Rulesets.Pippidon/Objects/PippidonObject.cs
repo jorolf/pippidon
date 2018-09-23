@@ -1,4 +1,5 @@
-﻿using osu.Game.Rulesets.Objects;
+﻿using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Rulesets.Pippidon.Objects
 {
@@ -8,5 +9,7 @@ namespace osu.Game.Rulesets.Pippidon.Objects
         /// Range = [-1,1]
         /// </summary>
         public int Lane;
+
+        public override Judgement CreateJudgement() => new Judgement();
     }
 }

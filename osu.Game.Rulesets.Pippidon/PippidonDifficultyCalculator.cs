@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Pippidon
 {
     public class PippidonDifficultyCalculator : DifficultyCalculator
     {
-        public override double Calculate(Dictionary<string, double> categoryDifficulty = null)
+        public PippidonDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
+            : base(ruleset, beatmap)
         {
-            return 0;
+        }
+
+        protected override DifficultyAttributes Calculate(IBeatmap beatmap, Mod[] mods, double timeRate)
+        {
+            return new DifficultyAttributes(mods, 0);
         }
     }
 }

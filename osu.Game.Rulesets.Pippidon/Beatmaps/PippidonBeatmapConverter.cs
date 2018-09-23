@@ -10,11 +10,11 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
 {
     public class PippidonBeatmapConverter : BeatmapConverter<PippidonObject>
     {
-        protected override IEnumerable<Type> ValidConversionTypes => new[] { typeof(IHasXPosition) , typeof(IHasYPosition) };
+        protected override IEnumerable<Type> ValidConversionTypes { get; } = new[] { typeof(IHasXPosition) };
 
-        private readonly Dictionary<Beatmap, FloatRange> floatRanges = new Dictionary<Beatmap, FloatRange>();
+        private readonly Dictionary<IBeatmap, FloatRange> floatRanges = new Dictionary<IBeatmap, FloatRange>();
 
-        protected override IEnumerable<PippidonObject> ConvertHitObject(HitObject original, Beatmap beatmap)
+        protected override IEnumerable<PippidonObject> ConvertHitObject(HitObject original, IBeatmap beatmap)
         {
             float pos = (original as IHasYPosition)?.Y ?? ((IHasXPosition)original).X;
 
@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
             };
         }
 
-        private void calcRange(Beatmap beatmap)
+        private void calcRange(IBeatmap beatmap)
         {
             List<float> positions = beatmap.HitObjects.OfType<IHasYPosition>().Select(hitObject => hitObject.Y).ToList();
             if(!positions.Any())
@@ -46,6 +46,11 @@ namespace osu.Game.Rulesets.Pippidon.Beatmaps
         {
             public float Max, Min;
             public float Range => Max - Min;
+        }
+
+        public PippidonBeatmapConverter(IBeatmap beatmap)
+            : base(beatmap)
+        {
         }
     }
 }

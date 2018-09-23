@@ -24,11 +24,11 @@ namespace osu.Game.Rulesets.Pippidon.UI
         public int PippidonLane => pippidon.LanePosition;
 
         public PippidonPlayfield(PippidonRuleset ruleset)
-            : base(ScrollingDirection.Left)
         {
             VisibleTimeRange.Value = 6000;
+            Direction.Value = ScrollingDirection.Left;
 
-            ScaledContent.AddRange(new Drawable[]
+            base.Content.AddRange(new Drawable[]
             {
                 content = new Container
                 {

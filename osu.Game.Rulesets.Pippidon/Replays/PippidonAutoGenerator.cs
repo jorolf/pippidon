@@ -26,6 +26,8 @@ namespace osu.Game.Rulesets.Pippidon.Replays
         public override Replay Generate()
         {
             int lastLane = 0;
+            Frames.Add(new PippidonReplayFrame());
+
             foreach(PippidonObject hitObject in Beatmap.HitObjects)
             {
                 if (lastLane == hitObject.Lane)
@@ -47,8 +49,14 @@ namespace osu.Game.Rulesets.Pippidon.Replays
                         throw new Exception("Unknown lane");
                 }
 
-                Frames.Add(new PippidonReplayFrame(button));
-                Frames.Add(new PippidonReplayFrame()); //Release the keys as well
+                Frames.Add(new PippidonReplayFrame(button)
+                {
+                    Time = hitObject.StartTime - KEY_UP_DELAY
+                });
+                Frames.Add(new PippidonReplayFrame
+                {
+                    Time = hitObject.StartTime
+                }); //Release the keys as well
                 lastLane = hitObject.Lane;
             }
 
