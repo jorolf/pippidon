@@ -3,13 +3,14 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
-using OpenTK;
+using osuTK;
 using osu.Framework.Input.Bindings;
 using osu.Game.Graphics.Containers;
 using osu.Framework.Audio.Track;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.Pippidon.UI
@@ -18,17 +19,12 @@ namespace osu.Game.Rulesets.Pippidon.UI
     {
         private readonly Container content;
 
-        protected override Container<Drawable> Content => content;
-
         private readonly PippidonContainer pippidon;
         public int PippidonLane => pippidon.LanePosition;
 
         public PippidonPlayfield(PippidonRuleset ruleset)
         {
-            VisibleTimeRange.Value = 6000;
-            Direction.Value = ScrollingDirection.Left;
-
-            base.Content.AddRange(new Drawable[]
+            AddRangeInternal(new Drawable[]
             {
                 content = new Container
                 {
@@ -36,6 +32,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
                     Padding = new MarginPadding { Left = 200 },
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
+                    Child = HitObjectContainer
                 },
                 new LaneContainer
                 {
@@ -97,7 +94,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
         private class PippidonContainer : BeatSyncedContainer, IKeyBindingHandler<PippidonAction>
         {
-            public override bool HandleKeyboardInput => true;
+            public override bool HandleNonPositionalInput => true;
 
             public int LanePosition
             {

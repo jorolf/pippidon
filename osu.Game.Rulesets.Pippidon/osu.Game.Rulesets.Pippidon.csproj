@@ -11,6 +11,6 @@
     <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(OutDir)osu.Game.Rulesets.Pippidon.dll;$(OutDir)osu.Game.Rulesets.Pippidon.pdb" DestinationFolder="$(SolutionDir)osu/osu.Desktop/bin/$(ConfigurationName)/netcoreapp2.1" />
+    <Copy SourceFiles="$(OutDir)osu.Game.Rulesets.Pippidon.dll;$(OutDir)osu.Game.Rulesets.Pippidon.pdb" DestinationFolder="$(SolutionDir)osu/osu.Desktop/bin/$(ConfigurationName)/netcoreapp2.2" />
   </Target>
 </Project>

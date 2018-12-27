@@ -2,9 +2,9 @@
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
-using OpenTK;
+using osuTK;
 using System;
-using OpenTK.Graphics;
+using osuTK.Graphics;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Pippidon.Objects.Drawables

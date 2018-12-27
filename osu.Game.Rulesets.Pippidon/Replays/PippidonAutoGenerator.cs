@@ -1,9 +1,9 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Pippidon.Objects;
 using osu.Game.Rulesets.Replays;
-using osu.Game.Users;
 using System.Collections.Generic;
 using System;
+using osu.Game.Replays;
 
 namespace osu.Game.Rulesets.Pippidon.Replays
 {
@@ -14,13 +14,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
 
         public PippidonAutoGenerator(Beatmap<PippidonObject> beatmap) : base(beatmap)
         {
-            Replay = new Replay
-            {
-                User = new User
-                {
-                    Username = @"Pippppipiddddooon",
-                }
-            };
+            Replay = new Replay();
         }
 
         public override Replay Generate()
