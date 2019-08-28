@@ -1,5 +1,9 @@
-﻿using osu.Game.Beatmaps;
+﻿using System.Collections.Generic;
+using System.Linq;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Difficulty.Preprocessing;
+using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Pippidon
@@ -11,9 +15,13 @@ namespace osu.Game.Rulesets.Pippidon
         {
         }
 
-        protected override DifficultyAttributes Calculate(IBeatmap beatmap, Mod[] mods, double timeRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
-            return new DifficultyAttributes(mods, 0);
+            return new DifficultyAttributes(mods, skills, 0);
         }
+
+        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate) => Enumerable.Empty<DifficultyHitObject>();
+
+        protected override Skill[] CreateSkills(IBeatmap beatmap) => new Skill[0];
     }
 }

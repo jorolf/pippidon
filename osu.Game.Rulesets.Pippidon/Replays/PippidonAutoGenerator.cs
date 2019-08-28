@@ -7,12 +7,14 @@ using osu.Game.Replays;
 
 namespace osu.Game.Rulesets.Pippidon.Replays
 {
-    public class PippidonAutoGenerator : AutoGenerator<PippidonObject>
+    public class PippidonAutoGenerator : AutoGenerator
     {
         protected Replay Replay;
         protected List<ReplayFrame> Frames => Replay.Frames;
 
-        public PippidonAutoGenerator(Beatmap<PippidonObject> beatmap) : base(beatmap)
+        public new Beatmap<PippidonObject> Beatmap => (Beatmap<PippidonObject>)base.Beatmap;
+
+        public PippidonAutoGenerator(IBeatmap beatmap) : base(beatmap)
         {
             Replay = new Replay();
         }

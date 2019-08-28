@@ -7,26 +7,27 @@ using osuTK;
 using osu.Framework.Input.Bindings;
 using osu.Game.Graphics.Containers;
 using osu.Framework.Audio.Track;
+using osu.Framework.Bindables;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI.Scrolling;
 
 namespace osu.Game.Rulesets.Pippidon.UI
 {
+    [Cached]
     public class PippidonPlayfield : ScrollingPlayfield
     {
-        private readonly Container content;
-
         private readonly PippidonContainer pippidon;
-        public int PippidonLane => pippidon.LanePosition;
+        public const float LANE_HEIGHT = 70;
+
+        public BindableInt PippidonLane => pippidon.LanePosition;
 
         public PippidonPlayfield(PippidonRuleset ruleset)
         {
             AddRangeInternal(new Drawable[]
             {
-                content = new Container
+                new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Padding = new MarginPadding { Left = 200 },
@@ -37,14 +38,14 @@ namespace osu.Game.Rulesets.Pippidon.UI
                 new LaneContainer
                 {
                     RelativeSizeAxes = Axes.X,
-                    Height = 70,
+                    Height = LANE_HEIGHT,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Depth = 1,
                 },
                 pippidon = new PippidonContainer
                 {
-                    Size = new Vector2(70),
+                    Size = new Vector2(LANE_HEIGHT),
                     Texture = ruleset.TextureStore.Get("pippidon"),
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreRight,
@@ -96,22 +97,7 @@ namespace osu.Game.Rulesets.Pippidon.UI
         {
             public override bool HandleNonPositionalInput => true;
 
-            public int LanePosition
-            {
-                get { return (int)(Y / Height); }
-                private set
-                {
-                    float y;
-                    if (value < -1)
-                        y = 1 * Height;
-                    else if (value > 1)
-                        y = -1 * Height;
-                    else
-                        y = value * Height;
-
-                    this.MoveToY(y);
-                }
-            }
+            public readonly BindableInt LanePosition;
 
             public Texture Texture
             {
@@ -128,6 +114,18 @@ namespace osu.Game.Rulesets.Pippidon.UI
                     Scale = new Vector2(1.2f),
                     RelativeSizeAxes = Axes.Both,
                 };
+
+                LanePosition = new BindableInt
+                {
+                    Value = 0,
+                    MinValue = -1,
+                    MaxValue = 1,
+                };
+
+                LanePosition.BindValueChanged(e =>
+                {
+                    this.MoveToY(e.NewValue * LANE_HEIGHT);
+                });
             }
 
             protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, TrackAmplitudes amplitudes)
@@ -152,17 +150,24 @@ namespace osu.Game.Rulesets.Pippidon.UI
 
             public bool OnPressed(PippidonAction action)
             {
+                int laneDelta = 0;
                 switch (action)
                 {
                     case PippidonAction.MoveUp:
-                        LanePosition--;
-                        return true;
+                        laneDelta--;
+                        break;
                     case PippidonAction.MoveDown:
-                        LanePosition++;
-                        return true;
+                        laneDelta++;
+                        break;
                     default:
                         return false;
                 }
+
+                //We add 3 so we don't have weird negative modulo math
+                //and we also add 1 and subtract 1 because the lane range is from [-1, 1] but modulo is [0, 2]
+                LanePosition.Value = (LanePosition.Value + laneDelta + 4) % 3 - 1;
+
+                return true;
             }
 
             public bool OnReleased(PippidonAction action) => false;

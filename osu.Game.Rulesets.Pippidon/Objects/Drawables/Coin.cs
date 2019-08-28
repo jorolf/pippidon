@@ -3,7 +3,9 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
-using System;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Game.Rulesets.Pippidon.UI;
 using osuTK.Graphics;
 using osu.Game.Rulesets.Scoring;
 
@@ -13,20 +15,36 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
     {
         private const int hit_window = 100;
 
-        private readonly Func<int, bool> touchingPippi;
+        private bool laneLost;
+        private BindableInt pippidonLane;
 
-        public Coin(PippidonObject hitObject, TextureStore textures, Func<int, bool> touchingPippi) : base(hitObject)
+        public Coin(PippidonObject hitObject, TextureStore textures) : base(hitObject)
         {
             Size = new Vector2(40);
-            Y = hitObject.Lane * 79;
-
-            this.touchingPippi = touchingPippi;
+            Anchor = Anchor.CentreLeft;
+            Origin = Anchor.Centre;
+            Y = hitObject.Lane * PippidonPlayfield.LANE_HEIGHT;
 
             AddInternal(new Sprite
             {
                 RelativeSizeAxes = Axes.Both,
                 Texture = textures.Get("coin"),
             });
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(PippidonPlayfield playfield)
+        {
+            pippidonLane = (BindableInt)playfield.PippidonLane.GetBoundCopy();
+            pippidonLane.ValueChanged += e =>
+            {
+                if (e.OldValue == HitObject.Lane && e.NewValue != HitObject.Lane)
+                {
+                    laneLost = true;
+                    UpdateResult(true);
+                } else if (e.OldValue != HitObject.Lane && e.NewValue == HitObject.Lane)
+                    laneLost = false;
+            };
         }
 
         protected override void Update()
@@ -39,9 +57,13 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (Math.Abs(timeOffset) < hit_window)
+            if (laneLost && timeOffset > -hit_window)
             {
-                if (touchingPippi(HitObject.Lane))
+                ApplyResult(r => r.Type = HitResult.Perfect);
+            }
+            else if (timeOffset >= 0 && timeOffset <= hit_window)
+            {
+                if (pippidonLane.Value == HitObject.Lane)
                 {
                     ApplyResult(r => r.Type = HitResult.Perfect);
                 }
@@ -52,16 +74,15 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
             }
         }
 
-        protected override void UpdateState(ArmedState state)
+        protected override void UpdateStateTransforms(ArmedState state)
         {
-            ClearTransformsAfter(Time.Current);
             switch (state)
             {
                 case ArmedState.Hit:
                     this.ScaleTo(5, 1500, Easing.OutQuint).FadeOut(1500, Easing.OutQuint).Expire();
                     break;
                 case ArmedState.Miss:
-                    this.FadeColour(Color4.Red, 1000, Easing.InQuint).Then().FadeOut(1000, Easing.InQuint).Expire();
+                    this.FadeColour(Color4.Red, 100, Easing.InQuint).Then().FadeOut(1000, Easing.InQuint).Expire();
                     break;
             }
         }

@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Pippidon.Mods
 {
     public class PippidonModAutoplay : ModAutoplay<PippidonObject>
     {
-        protected override Score CreateReplayScore(Beatmap<PippidonObject> beatmap) => new Score
+        public override Score CreateReplayScore(IBeatmap beatmap) => new Score
         {
             ScoreInfo = new ScoreInfo
             {

@@ -6,9 +6,9 @@ using osu.Game.Replays;
 
 namespace osu.Game.Rulesets.Pippidon.Replays
 {
-    public class PippidonReplayInputHandler : FramedReplayInputHandler<PippidonReplayFrame>
+    public class PippidonFramedReplayInputHandler : FramedReplayInputHandler<PippidonReplayFrame>
     {
-        public PippidonReplayInputHandler(Replay replay) : base(replay)
+        public PippidonFramedReplayInputHandler(Replay replay) : base(replay)
         {
         }
 
@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Pippidon.Replays
             {
                 new ReplayState<PippidonAction>
                 {
-                    PressedActions = CurrentFrame.Actions,
+                    PressedActions = CurrentFrame?.Actions ?? new List<PippidonAction>(),
                 }
             };
         }

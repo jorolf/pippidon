@@ -6,11 +6,7 @@ namespace osu.Game.Rulesets.Pippidon.Scoring
 {
     public class PippidonScoreProcessor : ScoreProcessor<PippidonObject>
     {
-        public PippidonScoreProcessor()
-        {
-        }
-
-        public PippidonScoreProcessor(RulesetContainer<PippidonObject> ruleset) : base(ruleset)
+        public PippidonScoreProcessor(DrawableRuleset<PippidonObject> ruleset) : base(ruleset)
         {
         }
 

@@ -2,7 +2,6 @@
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
-using osu.Game.Rulesets.Pippidon.UI;
 using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Graphics.Textures;
@@ -11,6 +10,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Pippidon.Beatmaps;
 using osu.Game.Rulesets.Pippidon.Mods;
+using osu.Game.Rulesets.Pippidon.UI;
 
 namespace osu.Game.Rulesets.Pippidon
 {
@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Pippidon
 
         public override string Description => "pippipidoooooon";
 
-        public override RulesetContainer CreateRulesetContainerWith(WorkingBeatmap beatmap) => new PippidonRulesetContainer(this, beatmap);
+        public override DrawableRuleset CreateDrawableRulesetWith(WorkingBeatmap beatmap, IReadOnlyList<Mod> mods) => new PippidonDrawableRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new PippidonBeatmapConverter(beatmap);
 
