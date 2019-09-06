@@ -11,5 +11,7 @@ namespace osu.Game.Rulesets.Pippidon.Objects
         public int Lane;
 
         public override Judgement CreateJudgement() => new Judgement();
+
+        protected override HitWindows CreateHitWindows() => new PippidonHitWindows();
     }
 }

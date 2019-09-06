@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics.Sprites;
+﻿using System;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -13,8 +14,6 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 {
     public class Coin : DrawableHitObject<PippidonObject>
     {
-        private const int hit_window = 100;
-
         private bool laneLost;
         private BindableInt pippidonLane;
 
@@ -42,8 +41,12 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
                 {
                     laneLost = true;
                     UpdateResult(true);
-                } else if (e.OldValue != HitObject.Lane && e.NewValue == HitObject.Lane)
                     laneLost = false;
+                }
+                else
+                {
+                    UpdateResult(true);
+                }
             };
         }
 
@@ -51,26 +54,28 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
         {
             base.Update();
 
-            if (Time.Current - HitObject.StartTime < -hit_window)
+            //timeOffset is inverted because we need to check whether the hitobject could've been hit in the past
+            if (HitObject.HitWindows.CanBeHit(HitObject.StartTime - Time.Current))
                 UpdateResult(true);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (laneLost && timeOffset > -hit_window)
+            var timeOffsetAbs = Math.Abs(timeOffset);
+
+            if (laneLost && HitObject.HitWindows.CanBeHit(timeOffsetAbs))
             {
-                ApplyResult(r => r.Type = HitResult.Perfect);
+                ApplyResult(r => r.Type = HitObject.HitWindows.ResultFor(timeOffset));
             }
-            else if (timeOffset >= 0 && timeOffset <= hit_window)
+            else if (timeOffset >= 0)
             {
-                if (pippidonLane.Value == HitObject.Lane)
+                if (HitObject.HitWindows.CanBeHit(timeOffsetAbs))
                 {
-                    ApplyResult(r => r.Type = HitResult.Perfect);
+                    if (pippidonLane.Value == HitObject.Lane)
+                        ApplyResult(r => r.Type = HitObject.HitWindows.ResultFor(timeOffset));
                 }
-            }
-            else if (timeOffset > hit_window)
-            {
-                ApplyResult(r => r.Type = HitResult.Miss);
+                else
+                    ApplyResult(r => r.Type = HitResult.Miss);
             }
         }
 
