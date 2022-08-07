@@ -2,11 +2,10 @@
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System.Collections.Generic;
-using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Objects;
+using System.Linq;
 using osu.Game.Rulesets.Scoring;
 
-namespace osu.Game.Rulesets.Pippidon.Objects
+namespace osu.Game.Rulesets.Pippidon.Scoring
 {
     public class PippidonHitWindows : HitWindows
     {
@@ -18,7 +17,7 @@ namespace osu.Game.Rulesets.Pippidon.Objects
             { HitResult.Meh, 1 * default_hit_window },
         };
 
-        private const int default_hit_window = 300;
+        private const int default_hit_window = 150;
         private const double oc0_modifier = 1.5;
         private const double oc10_modifier = 0.75;
 
@@ -38,14 +37,15 @@ namespace osu.Game.Rulesets.Pippidon.Objects
             }
         }
 
-        public override void SetDifficulty(double difficulty)
+        protected override DifficultyRange[] GetRanges()
         {
-            (double, double, double) mapRange(double oc5Window) => (oc5Window * oc0_modifier, oc5Window, oc5Window * oc10_modifier);
-
-            Perfect = BeatmapDifficulty.DifficultyRange(difficulty, mapRange(base_ranges[HitResult.Perfect]));
-            Great = BeatmapDifficulty.DifficultyRange(difficulty, mapRange(base_ranges[HitResult.Great]));
-            Ok = BeatmapDifficulty.DifficultyRange(difficulty, mapRange(base_ranges[HitResult.Ok]));
-            Meh = BeatmapDifficulty.DifficultyRange(difficulty, mapRange(base_ranges[HitResult.Meh]));
+            return base_ranges.Select(range => new DifficultyRange
+            (
+                range.Key,
+                range.Value * oc0_modifier,
+                range.Value,
+                range.Value * oc10_modifier
+            )).ToArray();
         }
     }
 }

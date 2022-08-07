@@ -7,7 +7,7 @@ using osu.Game.Scoring;
 
 namespace osu.Game.Rulesets.Pippidon.Mods
 {
-    public class PippidonModAutoplay : ModAutoplay<PippidonObject>
+    public class PippidonModAutoplay : ModAutoplay<PippidonHitObject>
     {
         public override Score CreateReplayScore(IBeatmap beatmap) => new Score
         {

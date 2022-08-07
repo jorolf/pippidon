@@ -1,13 +1,12 @@
 ﻿using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Pippidon.Scoring;
+using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Pippidon.Objects
 {
-    public class PippidonObject : HitObject
+    public class PippidonHitObject : HitObject
     {
-        /// <summary>
-        /// Range = [-1,1]
-        /// </summary>
         public int Lane;
 
         public override Judgement CreateJudgement() => new Judgement();

@@ -16,18 +16,18 @@ namespace osu.Game.Rulesets.Pippidon
 {
     public class PippidonRuleset : Ruleset
     {
-        public ResourceStore<byte[]> ResourceStore;
-        public TextureStore TextureStore;
+        public readonly IResourceStore<byte[]> ResourceStore;
+        public readonly TextureStore TextureStore;
 
         public PippidonRuleset(RulesetInfo rulesetInfo) : base(rulesetInfo)
         {
-            ResourceStore = new NamespacedResourceStore<byte[]>(new DllResourceStore("osu.Game.Rulesets.Pippidon.dll"), @"Resources");
+            ResourceStore = CreateResourceStore();
             TextureStore = new TextureStore(new TextureLoaderStore(new NamespacedResourceStore<byte[]>(ResourceStore, @"Textures")));
         }
 
         public override string Description => "pippipidoooooon";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(WorkingBeatmap beatmap, IReadOnlyList<Mod> mods) => new PippidonDrawableRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(IWorkingBeatmap beatmap, IReadOnlyList<Mod> mods) => new PippidonDrawableRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new PippidonBeatmapConverter(beatmap);
 

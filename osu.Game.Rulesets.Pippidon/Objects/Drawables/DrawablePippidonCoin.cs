@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
@@ -6,36 +8,37 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Game.Audio;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Pippidon.UI;
 using osuTK.Graphics;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
 {
-    public class Coin : DrawableHitObject<PippidonObject>
+    public class DrawablePippidonCoin : DrawableHitObject<PippidonHitObject>
     {
         private bool laneLost;
-        private BindableInt pippidonLane;
+        private BindableInt currentLane;
 
-        public Coin(PippidonObject hitObject, TextureStore textures) : base(hitObject)
+        public DrawablePippidonCoin(PippidonHitObject hitObject) : base(hitObject)
         {
             Size = new Vector2(40);
-            Anchor = Anchor.CentreLeft;
             Origin = Anchor.Centre;
             Y = hitObject.Lane * PippidonPlayfield.LANE_HEIGHT;
+        }
 
+        [BackgroundDependencyLoader]
+        private void load(PippidonPlayfield playfield, TextureStore textures)
+        {
             AddInternal(new Sprite
             {
                 RelativeSizeAxes = Axes.Both,
                 Texture = textures.Get("coin"),
             });
-        }
 
-        [BackgroundDependencyLoader]
-        private void load(PippidonPlayfield playfield)
-        {
-            pippidonLane = (BindableInt)playfield.PippidonLane.GetBoundCopy();
-            pippidonLane.ValueChanged += e =>
+            currentLane = (BindableInt)playfield.PippidonLane.GetBoundCopy();
+            currentLane.ValueChanged += e =>
             {
                 if (e.OldValue == HitObject.Lane && e.NewValue != HitObject.Lane)
                 {
@@ -43,24 +46,31 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
                     UpdateResult(true);
                     laneLost = false;
                 }
-                else
-                {
-                    UpdateResult(true);
-                }
             };
         }
 
-        protected override void Update()
+        protected override IEnumerable<HitSampleInfo> GetSamples() => new[]
+        {
+            new HitSampleInfo
+            {
+                Bank = SampleControlPoint.DEFAULT_BANK,
+                Name = HitSampleInfo.HIT_NORMAL,
+            }
+        };
+
+        /*protected override void Update()
         {
             base.Update();
+            Debug.Assert(HitObject.HitWindows != null);
 
             //timeOffset is inverted because we need to check whether the hitobject could've been hit in the past
             if (HitObject.HitWindows.CanBeHit(HitObject.StartTime - Time.Current))
                 UpdateResult(true);
-        }
+        }*/
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
+            Debug.Assert(HitObject.HitWindows != null);
             var timeOffsetAbs = Math.Abs(timeOffset);
 
             if (laneLost && HitObject.HitWindows.CanBeHit(timeOffsetAbs))
@@ -71,7 +81,7 @@ namespace osu.Game.Rulesets.Pippidon.Objects.Drawables
             {
                 if (HitObject.HitWindows.CanBeHit(timeOffsetAbs))
                 {
-                    if (pippidonLane.Value == HitObject.Lane)
+                    if (currentLane.Value == HitObject.Lane)
                         ApplyResult(r => r.Type = HitObject.HitWindows.ResultFor(timeOffset));
                 }
                 else
